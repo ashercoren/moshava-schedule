@@ -24,7 +24,7 @@ var list = [
 ]
 list.sort(sortBunks);
 
-class Bunks {
+class BunkList {
   static getList(){
     return list;
   };
@@ -39,4 +39,4 @@ class Bunks {
   }
 }
 
-export default Bunks;
+export default BunkList;

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Table, FormGroup, FormControl } from 'react-bootstrap';
-import Activities from './activities.js'
-import Bunks from './bunks.js'
-import './App.css';
+import ActivityList from '../activities/list.js'
+import BunkList from '../bunks/list.js'
 
 const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Shabbat"];
 const regularHours = [
@@ -32,7 +31,7 @@ class ScheduleElement extends Component {
   constructor(props){
     super(props);
     this.state = {
-      activities: Activities.getList()
+      activities: ActivityList.getList()
     }
   }
 
@@ -81,7 +80,7 @@ class DayInCamp extends Component {
 
   constructor(props){
     super(props);
-    let dayOfWeek = props.date.getDay();
+    let dayOfWeek = null;//props.date.getDay();
     let hours;
     switch (dayOfWeek){
       case 5:
@@ -93,7 +92,7 @@ class DayInCamp extends Component {
       default:
         hours = regularHours;
     }
-    let bunks = Bunks.getList();
+    let bunks = BunkList.getList();
     let schedule = bunks.reduce((res,bunk) => {
       res[bunk.name] = {}
       hours.forEach(hour => {
