@@ -1,10 +1,7 @@
 import remove from 'lodash.remove';
+import findindex from 'lodash.findindex';
 
-const list = [
-    {name:"Swimming",         location:"Pool"},
-    {name:"BasketBall",       location:"Boys Court"},
-    {name:"Chavaya Yisraelit",location:"Chavaya Tent"}
-];
+const list = [];
 
 class ActivityList {
 
@@ -12,8 +9,15 @@ class ActivityList {
     return list;
   };
 
-  static addActivity(name,location){
-    list.push({name:name,location:location});
+  static addActivity(activity){
+    list.push(activity);
+  }
+
+  static updateActivity(activity){
+    let index = findindex(list,{name:activity.name});
+    if (index>-1){
+      list.splice(index,1,activity);
+    }
   }
 
   static removeActivity(name){

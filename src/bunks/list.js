@@ -1,4 +1,5 @@
 import remove from 'lodash.remove';
+import findindex from 'lodash.findindex';
 
 const edahOrder = ["hey","alpha","bet","gimmel","dalet","machal"];
 
@@ -12,16 +13,7 @@ function sortBunks(b1,b2){
   return b2.name < b1.name;
 }
 
-var list = [
-  {edah: "hey",   gender:"boys",  name:"b1"},
-  {edah: "hey",   gender:"boys",  name:"b2"},
-  {edah: "hey",   gender:"girls", name:"g1"},
-  {edah: "hey",   gender:"girls", name:"g2"},
-  {edah: "alpeh", gender:"boys",  name:"b3"},
-  {edah: "alpeh", gender:"boys",  name:"b4"},
-  {edah: "alpeh", gender:"girls", name:"g3"},
-  {edah: "alpeh", gender:"girls", name:"g4"},
-]
+var list = []
 list.sort(sortBunks);
 
 class BunkList {
@@ -29,13 +21,20 @@ class BunkList {
     return list;
   };
 
-  static addBunk(edah,gender,name){
-    list.push({edah:edah,gender:gender,name:name});
+  static addBunk(bunk){
+    list.push(bunk);
     list.sort(sortBunks);
   }
 
-  static removeBunk(name){
-    remove(list, bunk => bunk.name === name);
+  static updateBunk(Bunk){
+    let index = findindex(list,{name:Bunk.name});
+    if (index>-1){
+      list.splice(index,1,Bunk);
+    }
+  }
+
+  static removeBunk(bunkToRemove){
+    remove(list, bunk => bunk.name === bunkToRemove.name);
   }
 }
 

@@ -1,34 +1,24 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import DayInCamp from './schedule/Schedule';
-import Activities from './activities/Activities';
-import { BrowserRouter as Router , Link, Route} from 'react-router-dom'
-import './index.css';
+//REACT
+import React from 'react'
+import { render } from 'react-dom'
 
-class Body extends Component {
+//REDUX
+import { createStore, applyMiddleware } from 'redux';
+import { createLogger } from 'redux-logger';
+import { Provider } from 'react-redux';
 
-  handleSelect(){
+import reducer from './reducers'
+import App from './components/App';
 
-  }
+const middleware = [ createLogger() ]
+const store = createStore(
+  reducer,
+  applyMiddleware(...middleware)
+);
 
-  render(){
-    return(
-      <Router>
-        <div>
-          <Link to="/schedule">Schedule</Link>
-          <Link to="/activities">Manage Activities</Link>
-          <Route exact={true} path="/" render={()=>(
-            <p>Moshava Scheduling Tool</p>
-          )}/>
-          <Route path="/schedule/" component={DayInCamp}/>
-          <Route path="/activities/" component={Activities}/>
-        </div>
-      </Router>
-    )
-  }
-}
-
-ReactDOM.render(
-  <Body />,
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 );
