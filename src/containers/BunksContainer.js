@@ -1,6 +1,7 @@
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import EntityList from '../components/EntityList';
-import {updateBunk, deleteBunk, createBunk} from '../actions';
+import {fetchBunks, updateBunk, deleteBunk, createBunk} from '../actions';
 
 const edahOrder = ["hey","alpha","bet","gimmel","dalet","machal"];
 
@@ -14,11 +15,38 @@ const sortBunks = (b1,b2) => {
   return b2.name < b1.name;
 }
 
+class BunkListContainer extends Component {
+
+  componentDidMount() {
+    const { fetchBunks } = this.props
+    fetchBunks();
+  }
+
+  render(){
+    const {fetched, items, onCreate, onDelete, onUpdate} = this.props;
+    if (fetched) {
+      return (
+        <EntityList entities = {items}
+                    name = "Bunks"
+                    keys = {["Edah","Gedner","Number Of Kids"]}
+                    onCreate = {onCreate}
+                    onDelete = {onDelete}
+                    onUpdate = {onUpdate}/>
+      )
+    }
+    else {
+      return (
+        <p>Loading Bunks</p>
+      )
+    }
+  }
+}
+
+
 const mapStateToProps = (state) => {
+  const {fetched, items} = state.bunks
   return {
-    entities: state.bunks.sort(sortBunks),
-    name:"Bunks",
-    keys:["Edah","Gedner","Number Of Kids"]
+    fetched,items
   }
 }
 
@@ -32,13 +60,13 @@ const mapDispatchToProps = (dispatch) => {
     },
     onCreate: (bunk) => {
       dispatch(createBunk(bunk))
+    },
+    fetchBunks: () => {
+      dispatch(fetchBunks(dispatch))
     }
   }
 }
 
-const BunkListContainer = connect(
+export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(EntityList)
-
-export default BunkListContainer
+  mapDispatchToProps)(BunkListContainer)
