@@ -36,12 +36,12 @@ const bunks = (state = initialState, action) => {
     case 'UPDATE_BUNK':
       return {
         ...state,
-        items: [state.items.map(bunk => {
+        items: state.items.map(bunk => {
           if (bunk.id !== action.bunk.id) {
             return bunk
           }
           return action.bunk;
-        })]
+        })
       };
 
     default:

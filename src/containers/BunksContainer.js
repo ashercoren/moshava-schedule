@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import EntityList from '../components/EntityList';
 import {fetchBunks, updateBunk, deleteBunk, createBunk} from '../actions';
 
-const edahOrder = ["hey","alpha","bet","gimmel","dalet","machal"];
+const edahOrder = ["Kaitana","Hey","Alpeh","Bet","Gimmel","Dalet","Machal"];
 
 const sortBunks = (b1,b2) => {
   if (b1.edah !== b2.edah){

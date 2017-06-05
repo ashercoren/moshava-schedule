@@ -37,12 +37,12 @@ const activities = (state = initialState, action) => {
     case 'UPDATE_ACTIVITY':
       return {
         ...state,
-        items: [state.items.map(activity => {
+        items: state.items.map(activity => {
           if (activity.id !== action.activity.id) {
             return activity
           }
           return action.activity;
-        })]
+        })
       };
 
     default:

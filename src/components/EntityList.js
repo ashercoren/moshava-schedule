@@ -42,8 +42,7 @@ export default class EntityList extends Component {
             <Entity
                 properties={properties}
                 entity={{}}
-                onUpdate={(newEntity)=> onCreate(newEntity)}
-                editMode/>
+                onUpdate={(newEntity)=> onCreate(newEntity)}/>
           </tbody>
         </Table>
       </div>

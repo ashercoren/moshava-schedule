@@ -24,6 +24,9 @@ export const fetchBunks = () => (dispatch) => {
 }
 
 export const updateBunk = (bunk) => {
+  let updates = {};
+  updates['bunks/' + bunk.id] = bunk;
+  database().ref().update(updates)
   return {
     type: "UPDATE_BUNK",
     bunk
@@ -74,6 +77,9 @@ export const fetchActivities = () => (dispatch) => {
 }
 
 export const updateActivity = (activity) => {
+  let updates = {};
+  updates['activities/' + activity.id] = activity;
+  database().ref().update(updates)
   return {
     type: "UPDATE_ACTIVITY",
     activity

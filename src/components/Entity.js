@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import FontAwesome from 'react-fontawesome';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+
+import '../styles/entity.css'
 
 export default class Entity extends Component {
 
@@ -9,22 +12,35 @@ export default class Entity extends Component {
     onDelete: PropTypes.func,
     entity: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
-    editMode: PropTypes.bool
   }
 
   constructor(props){
     super(props);
     this.state={
       updatedEntity:this.props.entity,
-      saveEnabled:false
+      saveEnabled:false,
+      editMode:false
     }
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      updatedEntity:nextProps.entity
+    })
+  }
+
+  setEditMode(isOn){
+    this.setState({
+      editMode:isOn
+    });
   }
 
   saveEntity(){
     this.props.onUpdate(this.state.updatedEntity);
     this.setState({
       updatedEntity:this.props.entity,
-      saveEnabled:false
+      saveEnabled:false,
+      editMode:false
     });
   }
 
@@ -115,6 +131,11 @@ export default class Entity extends Component {
                     onClick={()=>{this.saveEntity()}}>
                     Save
             </Button>
+            {this.state.editMode &&
+              <Button onClick={()=>{this.setEditMode(false)}}>
+                      Cancel
+              </Button>
+            }
         </td>
       </tr>
     )
@@ -128,15 +149,22 @@ export default class Entity extends Component {
           <td key={k}>{entity[k]}</td>
         )}
         <td>
-          <button onClick={onDelete}>X</button>
+          <button onClick={onDelete}
+                  className='entity-action'>
+            <FontAwesome name='times'/>
+          </button>
+          <button onClick={()=> this.setEditMode(true)}
+                  className='entity-action'>
+            <FontAwesome name='pencil'/>
+          </button>
         </td>
       </tr>
     )
   }
 
   render() {
-    const { editMode } = this.props;
-    if (editMode){
+    const { entity } = this.props;
+    if (Object.keys(entity).length === 0 || this.state.editMode){
       return this.editModeRender();
     }
     return this.nonEditRender();
