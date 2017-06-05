@@ -33,7 +33,7 @@ export const updateBunk = (bunk) => {
 export const deleteBunk = (id) => {
   database().ref('bunks/'+id).remove();
   return {
-    type: "REMOVE_BUNKS",
+    type: "REMOVE_BUNK",
     id
   }
 }

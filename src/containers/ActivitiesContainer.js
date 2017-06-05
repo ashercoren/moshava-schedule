@@ -3,11 +3,25 @@ import { connect } from 'react-redux';
 import EntityList from '../components/EntityList';
 import {fetchActivities, updateActivity, deleteActivity, createActivity} from '../actions';
 
+const properties = {
+  name: {
+    type:"text",
+    label:"Name"
+  },
+  location: {
+    type:"text",
+    label:"Location"
+  }
+}
+
+const entityType = "Activities"
+
+
 class ActivityListContainer extends Component {
 
   componentDidMount() {
-    const { fetchActivities } = this.props
-    fetchActivities();
+    const { fetchActivities, fetched } = this.props
+    if (!fetched) fetchActivities();
   }
 
   render(){
@@ -15,8 +29,8 @@ class ActivityListContainer extends Component {
     if (fetched) {
       return (
         <EntityList entities = {items}
-                    name = "Activities"
-                    keys = {["name","location"]}
+                    entityType = {entityType}
+                    properties = {properties} 
                     onCreate = {onCreate}
                     onDelete = {onDelete}
                     onUpdate = {onUpdate}/>
@@ -24,7 +38,7 @@ class ActivityListContainer extends Component {
     }
     else {
       return (
-        <p>Loading Activities</p>
+        <p>Loading {entityType}</p>
       )
     }
   }
