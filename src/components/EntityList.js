@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 import Entity from './Entity';
 
-
 export default class EntityList extends Component {
   
   static propTypes = {
@@ -18,14 +17,18 @@ export default class EntityList extends Component {
   render() {
     const {entityType,properties,entities,onUpdate,onDelete,onCreate} = this.props
     const keys = Object.keys(properties)
+    const colWidth = "" + 85/keys.length + "%";
     return (
       <div>
         <h2>{entityType}</h2>
         <Table striped bordered condensed hover>
+          <colgroup>
+            <col span={keys.length} width={colWidth}></col>
+          </colgroup>
           <thead>
             <tr>
               {keys.map(k=>
-                <th key={k}>{k}</th>
+                <th key={k}>{properties[k].label}</th>
               )}
               <th></th>
             </tr>

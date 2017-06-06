@@ -123,16 +123,18 @@ export default class Entity extends Component {
     return (
       <tr>
         {Object.keys(properties).map(k=>
-          <td key={k}>
+          <td key={k} style={{"vertical-align": "middle"}}>
             {this.inputProperty(k,properties[k])}
           </td>
         )}
         <td><Button disabled={!saveEnabled}
+                    className='entity-action'
                     onClick={()=>{this.saveEntity()}}>
                     Save
             </Button>
             {this.state.editMode &&
-              <Button onClick={()=>{this.setEditMode(false)}}>
+              <Button onClick={()=>{this.setEditMode(false)}}
+                      className='entity-action'>
                       Cancel
               </Button>
             }
@@ -146,7 +148,7 @@ export default class Entity extends Component {
     return (
       <tr>
         {Object.keys(properties).map(k=>
-          <td key={k}>{entity[k]}</td>
+          <td key={k} style={{"vertical-align": "middle"}}>{entity[k]}</td>
         )}
         <td>
           <button onClick={onDelete}
