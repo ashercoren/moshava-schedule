@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
-import { Table, FormGroup, FormControl } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
+import ScheduleElement from './ScheduleElement'
 
-const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Shabbat"];
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import '../styles/datePicker.css';
+
 const regularHours = [
   {start:"8:00",  end:"9:00"},
   {start:"9:00",  end:"10:00"},
   {start:"10:00", end:"11:00"},
   {start:"11:00", end:"12:00"},
   {start:"12:00", end:"13:00"},
+  {start:"13:00", end:"14:00"},
+  {start:"14:00", end:"15:00"},
+  {start:"16:00", end:"16:00"},
+  {start:"17:00", end:"18:00"},
 ];
 const fridayHours = [
   {start:"8:00",  end:"9:00"},
@@ -24,97 +34,60 @@ const shabbatHours = [
   {start:"12:00", end:"13:00"},
 ];
 
-class ScheduleElement extends Component {
-
-  elementSelect(){
-    let options = this.props.activities.map(activity =>
-                <option key={activity.name}
-                        value={activity.name}>
-                  {activity.name}
-                </option>
-    );
-    return (
-      <FormGroup controlId="formControlsSelect">
-        <FormControl componentClass="select"
-                     placeholder="select"
-                     value={this.props.event || ""}
-                     onChange={(e)=> {
-                       this.props.setActivity(this.props.bunk,this.props.hour,e.target.value)}
-                     }>
-          <option value={null}></option>
-          {options}
-        </FormControl>
-      </FormGroup>
-    );
-  }
-
-  elementButton(){
-    return (
-      <button onClick={()=> this.props.setActivity(this.props.bunk,this.props.hour,5)}>
-        Click Me
-      </button>
-    );
-  }
-
-  render(){
-    return (
-      <td key={this.props.bunk.name+this.props.hour.start}>
-        {this.elementSelect()}
-      </td>
-    );
-  }
-}
-
 var setActivityInSchedule = function(schedule,bunk,hour,activity){
-    schedule[bunk.name][hour.start] = activity;
+    schedule[bunk.bunk][hour.start] = activity;
 }
 
 class DayInCamp extends Component {
 
   constructor(props){
     super(props);
-    let dayOfWeek = null;//props.date.getDay();
-    let hours;
-    switch (dayOfWeek){
-      case 5:
-        hours = fridayHours;
-        break;
-      case 6:
-        hours = shabbatHours;
-        break;
-      default:
-        hours = regularHours;
-    }
-    let schedule = props.bunks.reduce((res,bunk) => {
-      res[bunk.name] = {}
+    let defaultDate = moment();
+    let hours = this.calcHours(defaultDate);
+    
+    this.state = {
+      schedule: this.resetSchedule(hours),
+      hours:hours,
+      scheduleDate:defaultDate
+    };
+  }
+
+  resetSchedule(hours){
+    return this.props.bunks.reduce((res,bunk) => {
+      res[bunk.bunk] = {}
       hours.forEach(hour => {
         setActivityInSchedule(res,bunk,hour,null);
       });
       return res;
     },{});
+  }
 
-    this.state = {
-      schedule: schedule,
-      dayOfWeek:dayNames[dayOfWeek],
-      hours:hours
-    };
+  calcHours(date){
+    switch (date.day()){
+      case 5:
+        return fridayHours;
+      case 6:
+        return shabbatHours;
+      default:
+        return regularHours;
+    }
   }
 
   bunkRow(bunk){
     let items = this.state.hours.map(hour => 
       <ScheduleElement activities={this.props.activities}
-                       key={bunk.name+hour.start}
+                       key={bunk.bunk+hour.start}
                        setActivity={(bunk,hour,activity)=>{
                          this.setActivity(bunk,hour,activity)
                        }}
                        bunk={bunk}
                        hour={hour}
-                       event={this.state.schedule[bunk.name][hour.start]}/>
+                       event={this.state.schedule[bunk.bunk][hour.start]}/>
     );
 
     return (
-      <tr key={bunk.name}>
-        <td>{bunk.name.toUpperCase()}</td>
+      <tr key={bunk.bunk}>
+        <td>{bunk.bunk.toUpperCase()}</td>
         {items}
       </tr>
     );
@@ -124,6 +97,19 @@ class DayInCamp extends Component {
     return (
       <td key={hour.start}>{hour.start} - {hour.end}</td>
     );
+  }
+
+  setDate(e){
+    let hours = this.calcHours(e);
+    let schedule = (hours === this.state.hours) ? this.state.schedule : this.resetSchedule(hours);
+    this.setState({
+      schedule: schedule,
+      scheduleDate : e,
+      hours:hours})
+  }
+
+  saveSchedule(){
+    this.props.saveSchedule(this.state.schedule);
   }
 
   setActivity(bunk,hour,activity){
@@ -137,17 +123,27 @@ class DayInCamp extends Component {
 
   render() {
     return (
-      <Table striped bordered condensed hover>
-        <thead>
-          <tr>
-            <th>Bunk</th>
-            {this.state.hours.map(this.hourHeader)}
-          </tr>
-        </thead>
-        {<tbody>
-          {this.props.bunks.map(bunk => this.bunkRow(bunk))}
-        </tbody>}
-      </Table>
+      <div>
+        <span>Schedule for date: </span>
+        <DatePicker selected={this.state.scheduleDate}
+                    onChange={e => {this.setDate(e)}}
+                    dateFormat="ddd, MMMM DD YYYY"/>
+        <Button bsStyle="primary"
+                onClick={()=>{this.saveSchedule()}}>
+          Save
+        </Button>
+        <Table striped bordered condensed hover>
+          <thead>
+            <tr>
+              <th>Bunk</th>
+              {this.state.hours.map(this.hourHeader)}
+            </tr>
+          </thead>
+          {<tbody>
+            {this.props.bunks.map(bunk => this.bunkRow(bunk))}
+          </tbody>}
+        </Table>
+      </div>
     );
   }
 }

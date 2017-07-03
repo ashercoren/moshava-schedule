@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import EntityList from '../components/EntityList';
-import {fetchBunks, updateBunk, deleteBunk, createBunk} from '../actions';
+import {fetchList, updateEntity, deleteEntity, createEntity} from '../actions';
 
+const dataType = "bunks";
 const edahOrder = ["Kaitana","Hey","Alpeh","Bet","Gimmel","Dalet","Machal"];
 
 const sortBunks = (b1,b2) => {
@@ -76,16 +77,16 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onUpdate: (bunk) => {
-      dispatch(updateBunk(bunk))
+      dispatch(updateEntity(bunk,dataType))
     },
     onDelete: (id) => {
-      dispatch(deleteBunk(id))
+      dispatch(deleteEntity(id,dataType))
     },
     onCreate: (bunk) => {
-      dispatch(createBunk(bunk))
+      dispatch(createEntity(bunk,dataType))
     },
     fetchBunks: () => {
-      dispatch(fetchBunks(dispatch))
+      dispatch(fetchList(dispatch,dataType))
     }
   }
 }

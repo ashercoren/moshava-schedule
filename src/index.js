@@ -3,13 +3,16 @@ import React from 'react'
 import { render } from 'react-dom'
 
 //REDUX
-import { createStore, applyMiddleware } from 'redux';
-import { createLogger } from 'redux-logger';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk'
 
 import reducer from './reducers'
 import App from './components/App';
+
+//CSS
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
 
 //FIREBASE
 import * as firebase from 'firebase';
@@ -23,10 +26,13 @@ var config = {
 };
 firebase.initializeApp(config);
 
-const middleware = [ thunk, createLogger() ]
+const middleware = [ thunk ];
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducer,
-  applyMiddleware(...middleware)
+  composeEnhancers(
+    applyMiddleware(...middleware)
+  )
 );
 
 render(

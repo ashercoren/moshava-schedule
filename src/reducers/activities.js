@@ -1,52 +1,60 @@
 const initialState = {
   fetched:false,
+  fetching:false,
   items:[]
 }
 
 const activities = (state = initialState, action) => {
 
-  switch (action.type) {
+  if (action.entityType === "activities"){
+    switch (action.type) {
 
-    case 'FETCH_ACTIVITIES':
-      return {
-        ...state,
-        fetched:false
-      }
+      case 'FETCH_LIST':
+        return {
+          ...state,
+          fetching:true
+        }
 
-    case 'RECEIVE_ACTIVITIES':
-      return {
-        ...state,
-        fetched:true,
-        items:action.activities
-      }
-    
-    case 'ADD_ACTIVITY':
-      return {
-        ...state,
-        items: [...state.items,action.activity],
-      };
+      case 'RECEIVE_LIST':
+        return {
+          ...state,
+          fetched:true,
+          fetching:false,
+          items:action.data
+        }
+      
+      case 'ADD_ENTITY':
+        return {
+          ...state,
+          items: [...state.items,action.entity],
+        };
 
-    case 'REMOVE_ACTIVITY':
-      return {
-        ...state,
-        items: state.items.filter(activity =>
-          activity.id !== action.id
-        )
-      };
+      case 'REMOVE_ENTITY':
+        return {
+          ...state,
+          items: state.items.filter(activity =>
+            activity.id !== action.id
+          )
+        };
 
-    case 'UPDATE_ACTIVITY':
-      return {
-        ...state,
-        items: state.items.map(activity => {
-          if (activity.id !== action.activity.id) {
-            return activity
-          }
-          return action.activity;
-        })
-      };
+      case 'UPDATE_ENTITY':
+        return {
+          ...state,
+          items: state.items.map(activity => {
+            if (activity.id !== action.entity.id) {
+              return activity
+            }
+            return action.entity;
+          })
+        };
 
-    default:
-      return state;
+      default:
+        return state;
+    }
+  }
+
+  else {
+    return state;
   }
 }
 

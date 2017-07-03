@@ -1,107 +1,75 @@
 import {database} from 'firebase';
 
-//BUNKS
-export const receiveBunks = (bunks) => {
+const databaseRef = (entityType) => {
+  return entityType+'/';
+}
+
+export const receiveList = (data,entityType) => {
   return {
-    type:"RECEIVE_BUNKS",
-    bunks
+    type: "RECEIVE_LIST",
+    entityType,
+    data
   }
 }
 
-export const requestBunks = () => {
+export const requestList = (entityType) => {
   return {
-    type:"FETCH_BUNKS"
+    type: "FETCH_LIST",
+    entityType
   }
 }
 
-export const fetchBunks = () => (dispatch) => {
-  dispatch(requestBunks());
-  return database().ref('bunks/').once('value').then(snapshot => {
+export const fetchList = (dispatch,entityType) => (dispatch) => {
+  dispatch(requestList(entityType));
+  return database().ref(databaseRef(entityType))
+                   .once('value')
+                   .then(snapshot => {
     let values = snapshot.val();
     values = values ? Object.values(values) : [];
-    dispatch(receiveBunks(values));
+    dispatch(receiveList(values,entityType));
   })
 }
 
-export const updateBunk = (bunk) => {
+export const updateEntity = (entity, entityType) => {
   let updates = {};
-  updates['bunks/' + bunk.id] = bunk;
+  updates[databaseRef(entityType) + entity.id] = entity;
   database().ref().update(updates)
   return {
-    type: "UPDATE_BUNK",
-    bunk
+    type: "UPDATE_ENTITY",
+    entityType,
+    entity
   }
 }
 
-export const deleteBunk = (id) => {
-  database().ref('bunks/'+id).remove();
+export const deleteEntity = (id, entityType) => {
+  database().ref(databaseRef(entityType)+id).remove();
   return {
-    type: "REMOVE_BUNK",
+    type: "REMOVE_ENTITY",
+    entityType,
     id
   }
 }
 
-export const createBunk = (bunk) => {
-  let newBunkId = database().ref().child('bunks').push().key;
+export const createEntity = (entity, entityType) => {
+  let newEntityId = database().ref()
+                              .child(entityType)
+                              .push()
+                              .key;
   let updates = {};
-  bunk.id = newBunkId;
-  updates['bunks/' + newBunkId] = bunk;
+  entity.id = newEntityId;
+  updates[databaseRef(entityType) + newEntityId] = entity;
   database().ref().update(updates)
   return {
-    type: "ADD_BUNK",
-    bunk
+    type: "ADD_ENTITY",
+    entityType,
+    entity
   }
 }
 
-//ACTIVITES
-export const receiveActivites = (activities) => {
+export const saveSchedule = (schedule) => {
   return {
-    type:"RECEIVE_ACTIVITIES",
-    activities
-  }
-}
-
-export const requestActivities = () => {
-  return {
-    type:"FETCH_ACTIVITIES"
-  }
-}
-
-export const fetchActivities = () => (dispatch) => {
-  dispatch(requestActivities());
-  return database().ref('activities/').once('value').then(snapshot => {
-    let values = snapshot.val();
-    values = values ? Object.values(values) : [];
-    dispatch(receiveActivites(values));
-  })
-}
-
-export const updateActivity = (activity) => {
-  let updates = {};
-  updates['activities/' + activity.id] = activity;
-  database().ref().update(updates)
-  return {
-    type: "UPDATE_ACTIVITY",
-    activity
-  }
-}
-
-export const deleteActivity = (id) => {
-  database().ref('activities/'+id).remove();
-  return {
-    type: "REMOVE_ACTIVITY",
-    id
-  }
-}
-
-export const createActivity = (activity) => {
-  let newActivityId = database().ref().child('activities').push().key;
-  let updates = {};
-  activity.id = newActivityId;
-  updates['activities/' + newActivityId] = activity;
-  database().ref().update(updates)
-  return {
-    type: "ADD_ACTIVITY",
-    activity
+    type: "ADD_ENTITY",
+    entityType,
+    entity
   }
 }

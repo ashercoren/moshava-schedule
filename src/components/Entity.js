@@ -17,16 +17,27 @@ export default class Entity extends Component {
   constructor(props){
     super(props);
     this.state={
+      firstProperty: Object.keys(this.props.properties)[0],
       updatedEntity:this.props.entity,
       saveEnabled:false,
       editMode:false
     }
   }
 
+  componentDidMount(){
+    if (this.nameInput) this.nameInput.focus();
+  }
+
   componentWillReceiveProps(nextProps){
     this.setState({
       updatedEntity:nextProps.entity
     })
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if (!prevState.editMode && this.state.editMode) {
+      if (this.nameInput) this.nameInput.focus();
+    }
   }
 
   setEditMode(isOn){
@@ -37,6 +48,7 @@ export default class Entity extends Component {
 
   saveEntity(){
     this.props.onUpdate(this.state.updatedEntity);
+    if (this.nameInput) this.nameInput.focus();
     this.setState({
       updatedEntity:this.props.entity,
       saveEnabled:false,
@@ -68,8 +80,10 @@ export default class Entity extends Component {
   }
 
   textProperty(key,property){
+    let ref = (input) => { this.nameInput = input;}
     return (
       <input type="text"
+             ref={(this.state.firstProperty === key) && ref}
              value={this.state.updatedEntity[key] || ""}
              placeholder={property.label}
              name={key}
@@ -78,8 +92,10 @@ export default class Entity extends Component {
   }
 
   numberProperty(key,property){
+    let ref = (input) => { this.nameInput = input;}
     return (
       <input type="number"
+             ref={(this.state.firstProperty === key) && ref}
              value={this.state.updatedEntity[key] || ""}
              placeholder={property.label}
              name={key}
@@ -88,8 +104,10 @@ export default class Entity extends Component {
   }
 
   selectProperty(key,property){
+    let ref = (input) => { this.nameInput = input;}
     return (
       <select name={key}
+              ref={(this.state.firstProperty === key) && ref}
               value={this.state.updatedEntity[key] || ""}
               onChange={(event)=>{this.entityChange(event.target)}}>
         <option value=""></option>
@@ -117,11 +135,22 @@ export default class Entity extends Component {
     }
   }
 
+  onKeyUp(key){
+    switch (key){
+      case "Enter":
+        return this.saveEntity();
+      case "Escape":
+        return this.setEditMode(false);
+      default:
+        return false;
+    }
+  }
+
   editModeRender() {
     const { properties } = this.props;
     let {saveEnabled} = this.state
     return (
-      <tr>
+      <tr onKeyUp={(e)=>{this.onKeyUp(e.key)}}>
         {Object.keys(properties).map(k=>
           <td key={k} style={{"vertical-align": "middle"}}>
             {this.inputProperty(k,properties[k])}

@@ -1,17 +1,26 @@
 const initialState = {
   fetched:false,
   fetching:false,
+  currentSession:null,
   items:[]
 }
 
-const bunks = (state = initialState, action) => {
-  if (action.entityType === "bunks"){
+const sessions = (state = initialState, action) => {
+
+  if (action.entityType === "sessions"){    
+  
     switch (action.type) {
+
+      case 'SELECT_ENTITY':
+        return {
+          ...state,
+          currentSession: action.entity
+        }
 
       case 'FETCH_LIST':
         return {
           ...state,
-          fetching: true
+          fetching:true
         }
 
       case 'RECEIVE_LIST':
@@ -21,7 +30,7 @@ const bunks = (state = initialState, action) => {
           fetching:false,
           items:action.data
         }
-
+      
       case 'ADD_ENTITY':
         return {
           ...state,
@@ -31,17 +40,17 @@ const bunks = (state = initialState, action) => {
       case 'REMOVE_ENTITY':
         return {
           ...state,
-          items: state.items.filter(bunk =>
-            bunk.id !== action.id
+          items: state.items.filter(session =>
+            session.id !== action.id
           )
         };
 
       case 'UPDATE_ENTITY':
         return {
           ...state,
-          items: state.items.map(bunk => {
-            if (bunk.id !== action.entity.id) {
-              return bunk
+          items: state.items.map(session => {
+            if (session.id !== action.entity.id) {
+              return session
             }
             return action.entity;
           })
@@ -56,4 +65,4 @@ const bunks = (state = initialState, action) => {
   }
 }
 
-export default bunks
+export default sessions

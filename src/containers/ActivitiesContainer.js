@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import EntityList from '../components/EntityList';
-import {fetchActivities, updateActivity, deleteActivity, createActivity} from '../actions';
+import {fetchList, updateEntity, deleteEntity, createEntity} from '../actions';
 
+const dataType = "activities";
 const properties = {
   name: {
     type:"text",
@@ -54,16 +55,16 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onUpdate: (activity) => {
-      dispatch(updateActivity(activity))
+      dispatch(updateEntity(activity,dataType))
     },
     onDelete: (id) => {
-      dispatch(deleteActivity(id))
+      dispatch(deleteEntity(id,dataType))
     },
     onCreate: (activity) => {
-      dispatch(createActivity(activity))
+      dispatch(createEntity(activity,dataType))
     },
     fetchActivities: () => {
-      dispatch(fetchActivities(dispatch))
+      dispatch(fetchList(dispatch,dataType))
     }
   }
 }
