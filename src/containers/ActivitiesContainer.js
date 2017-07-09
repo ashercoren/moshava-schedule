@@ -12,6 +12,11 @@ const properties = {
   location: {
     type:"text",
     label:"Location"
+  },
+  categoey: {
+    type:"select",
+    options:["Swim","Sport","Rops","Melehet Yad","Other"],
+    label:"Category"
   }
 }
 

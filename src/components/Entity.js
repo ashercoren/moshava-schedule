@@ -83,6 +83,7 @@ export default class Entity extends Component {
     let ref = (input) => { this.nameInput = input;}
     return (
       <input type="text"
+             onKeyPress={(e)=>{this.onKeyPress(e)}}
              ref={(this.state.firstProperty === key) && ref}
              value={this.state.updatedEntity[key] || ""}
              placeholder={property.label}
@@ -95,6 +96,7 @@ export default class Entity extends Component {
     let ref = (input) => { this.nameInput = input;}
     return (
       <input type="number"
+             onKeyPress={(e)=>{this.onKeyPress(e)}}
              ref={(this.state.firstProperty === key) && ref}
              value={this.state.updatedEntity[key] || ""}
              placeholder={property.label}
@@ -109,6 +111,7 @@ export default class Entity extends Component {
       <select name={key}
               ref={(this.state.firstProperty === key) && ref}
               value={this.state.updatedEntity[key] || ""}
+              onKeyPress={(event)=>{this.onKeyPress(event)}}
               onChange={(event)=>{this.entityChange(event.target)}}>
         <option value=""></option>
         {property.options.map(option =>
@@ -135,8 +138,8 @@ export default class Entity extends Component {
     }
   }
 
-  onKeyUp(key){
-    switch (key){
+  onKeyPress(event){
+    switch (event.key){
       case "Enter":
         return this.saveEntity();
       case "Escape":
@@ -150,9 +153,9 @@ export default class Entity extends Component {
     const { properties } = this.props;
     let {saveEnabled} = this.state
     return (
-      <tr onKeyUp={(e)=>{this.onKeyUp(e.key)}}>
+      <tr>
         {Object.keys(properties).map(k=>
-          <td key={k} style={{"vertical-align": "middle"}}>
+          <td key={k} style={{"verticalAlign": "middle"}}>
             {this.inputProperty(k,properties[k])}
           </td>
         )}
@@ -177,7 +180,7 @@ export default class Entity extends Component {
     return (
       <tr>
         {Object.keys(properties).map(k=>
-          <td key={k} style={{"vertical-align": "middle"}}>{entity[k]}</td>
+          <td key={k} style={{"verticalAlign": "middle"}}>{entity[k]}</td>
         )}
         <td>
           <button onClick={onDelete}
