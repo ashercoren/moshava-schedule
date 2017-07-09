@@ -69,7 +69,6 @@ export const createEntity = (entity, entityType) => {
 export const saveSchedule = (schedule) => {
   return {
     type: "ADD_ENTITY",
-    entityType,
-    entity
+    schedule
   }
 }

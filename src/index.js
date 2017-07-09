@@ -10,10 +10,6 @@ import thunk from 'redux-thunk'
 import reducer from './reducers'
 import App from './components/App';
 
-//CSS
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
-
 //FIREBASE
 import * as firebase from 'firebase';
 var config = {
