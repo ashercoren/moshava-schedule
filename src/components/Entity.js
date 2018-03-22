@@ -7,13 +7,6 @@ import '../styles/entity.css'
 
 export default class Entity extends Component {
 
-  static propTypes = {
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func,
-    entity: PropTypes.object.isRequired,
-    properties: PropTypes.object.isRequired,
-  }
-
   constructor(props){
     super(props);
     this.state={
@@ -183,14 +176,14 @@ export default class Entity extends Component {
           <td key={k} style={{"verticalAlign": "middle"}}>{entity[k]}</td>
         )}
         <td>
-          <button onClick={onDelete}
+          <Button onClick={onDelete}
                   className='entity-action'>
             <FontAwesome name='times'/>
-          </button>
-          <button onClick={()=> this.setEditMode(true)}
+          </Button>
+          <Button onClick={()=> this.setEditMode(true)}
                   className='entity-action'>
             <FontAwesome name='pencil'/>
-          </button>
+          </Button>
         </td>
       </tr>
     )
@@ -203,4 +196,11 @@ export default class Entity extends Component {
     }
     return this.nonEditRender();
   }
+}
+
+Entity.propTypes = {
+  onUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  entity: PropTypes.object.isRequired,
+  properties: PropTypes.object.isRequired,
 }

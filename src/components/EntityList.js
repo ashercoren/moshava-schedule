@@ -2,18 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 import Entity from './Entity';
-
+  
 export default class EntityList extends Component {
   
-  static propTypes = {
-    entities: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-    entityType: PropTypes.string.isRequired,
-    properties: PropTypes.object.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    onCreate: PropTypes.func.isRequired
-  }
-
   render() {
     const {entityType,properties,entities,onUpdate,onDelete,onCreate} = this.props
     const keys = Object.keys(properties)
@@ -51,4 +42,13 @@ export default class EntityList extends Component {
       </div>
     )
   }
+}
+
+EntityList.propTypes = {
+  entities: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  entityType: PropTypes.string.isRequired,
+  properties: PropTypes.object.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onCreate: PropTypes.func.isRequired
 }
