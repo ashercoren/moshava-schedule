@@ -2,13 +2,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-//REDUX
-import { createStore, applyMiddleware, compose } from 'redux';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk'
-
-import reducer from './reducers'
 import App from './components/App';
+import DataProvider from './context';
 
 //FIREBASE
 import * as firebase from 'firebase';
@@ -22,18 +17,9 @@ var config = {
 };
 firebase.initializeApp(config);
 
-const middleware = [ thunk ];
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
-  reducer,
-  composeEnhancers(
-    applyMiddleware(...middleware)
-  )
-);
-
 render(
-  <Provider store={store}>
+  <DataProvider>
     <App />
-  </Provider>,
+  </DataProvider>,
   document.getElementById('root')
 );
